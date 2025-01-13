@@ -41,8 +41,14 @@ var waitEvent func(handle uintptr, timeout float64) *event
 var wakeup func(handle uintptr)
 var waitAsyncRequests func(handle uintptr)
 
+var Inited bool
+
 func init() {
 	libmpv = loadLibrary()
+	if (libmpv == 0) {
+		return
+	}
+	Inited = true
 
 	purego.RegisterLibFunc(&create, libmpv, "mpv_create")
 	purego.RegisterLibFunc(&apiVersion, libmpv, "mpv_client_api_version")

@@ -9,14 +9,13 @@ import (
 )
 
 const (
-	libname = "libmpv.dll"
+	LibName = "libmpv.dll"
 )
 
-// loadLibrary loads the dll and panics on error.
 func loadLibrary() uintptr {
-	handle, err := windows.LoadLibrary(libname)
+	handle, err := windows.LoadLibrary(LibName)
 	if err != nil {
-		panic(fmt.Errorf("cannot load library %s: %w", libname, err))
+		return 0
 	}
 
 	return uintptr(handle)
