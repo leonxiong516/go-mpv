@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/gen2brain/go-mpv"
+	"github.com/leonxiong516/go-mpv"
 )
 
 func main() {
