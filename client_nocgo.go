@@ -45,7 +45,7 @@ var Inited bool
 
 func init() {
 	libmpv = loadLibrary()
-	if (libmpv == 0) {
+	if libmpv == 0 {
 		return
 	}
 	Inited = true
@@ -81,12 +81,13 @@ func init() {
 
 // Mpv represents an mpv client.
 type Mpv struct {
-	handle uintptr
+	handle  uintptr
+	cmdArgs []*byte
 }
 
 // New creates a new mpv instance and an associated client API handle.
 func New() *Mpv {
-	return &Mpv{create()}
+	return &Mpv{create(), make([]*byte, 100)}
 }
 
 // APIVersion returns the client api version the mpv source has been compiled with.
@@ -136,12 +137,12 @@ func (m *Mpv) SetOptionString(name, value string) error {
 
 // Command runs the specified command, returning an error if something goes wrong.
 func (m *Mpv) Command(cmd []string) error {
-	cmds := make([]*byte, 0)
-	for _, c := range cmd {
-		cmds = append(cmds, cStr(c))
+	for index, c := range cmd {
+		//cmds = append(cmds, cStr(c))
+		m.cmdArgs[index] = cStr(c)
 	}
-
-	return newError(command(m.handle, unsafe.SliceData(cmds)))
+	m.cmdArgs[len(cmd)] = nil
+	return newError(command(m.handle, unsafe.SliceData(m.cmdArgs)))
 }
 
 // CommandString runs the given command string, this string is parsed internally by mpv.
@@ -151,12 +152,13 @@ func (m *Mpv) CommandString(cmd string) error {
 
 // CommandAsync runs the command asynchronously.
 func (m *Mpv) CommandAsync(replyUserdata uint64, cmd []string) error {
-	cmds := make([]*byte, 0)
-	for _, c := range cmd {
-		cmds = append(cmds, cStr(c))
+	for index, c := range cmd {
+		//cmds = append(cmds, cStr(c))
+		m.cmdArgs[index] = cStr(c)
 	}
+	m.cmdArgs[len(cmd)] = nil
 
-	return newError(commandAsync(m.handle, replyUserdata, unsafe.SliceData(cmds)))
+	return newError(commandAsync(m.handle, replyUserdata, unsafe.SliceData(m.cmdArgs)))
 }
 
 // SetProperty sets the client property according to the given format.

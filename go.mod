@@ -1,4 +1,4 @@
-module github.com/gen2brain/go-mpv
+module github.com/leonxiong516/go-mpv
 
 go 1.21
 
