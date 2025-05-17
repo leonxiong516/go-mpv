@@ -43,10 +43,10 @@ var waitAsyncRequests func(handle uintptr)
 
 var Inited bool
 
-func init() {
+func InitLib() bool {
 	libmpv = loadLibrary()
 	if libmpv == 0 {
-		return
+		return Inited
 	}
 	Inited = true
 
@@ -77,6 +77,7 @@ func init() {
 	purego.RegisterLibFunc(&waitEvent, libmpv, "mpv_wait_event")
 	purego.RegisterLibFunc(&wakeup, libmpv, "mpv_wakeup")
 	purego.RegisterLibFunc(&waitAsyncRequests, libmpv, "mpv_wait_async_requests")
+	return true
 }
 
 // Mpv represents an mpv client.

@@ -15,7 +15,7 @@ static void setStringArray(char** a, int i, char* s) {
     a[i] = s;
 }
 
-#cgo !pkgconfig LDFLAGS: -lmpv
+#cgo !pkgconfig LDFLAGS: -L./mpv -lmpv
 #cgo pkgconfig,!static pkg-config: mpv
 #cgo pkgconfig,static pkg-config: --static mpv
 */
@@ -24,6 +24,10 @@ import "C"
 import (
 	"unsafe"
 )
+
+func InitLib() bool {
+	return true
+}
 
 // Mpv represents an mpv client.
 type Mpv struct {
