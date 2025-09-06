@@ -137,6 +137,12 @@ func (e *Event) LogMessage() EventLogMessage {
 // Property returns EventProperty.
 func (e *Event) Property() EventProperty {
 	s := (*eventProperty)(e.Data)
+	if e.EventID != EventPropertyChange {
+		return EventProperty{}
+	}
+	if s == nil || s.Name == nil {
+		return EventProperty{}
+	}
 	var ep EventProperty
 
 	ep.Name = toStr(s.Name)
